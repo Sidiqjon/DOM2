@@ -62,7 +62,7 @@ productCategory.addEventListener("click", (event)=>{
 })
 
 let offset = 0
-const perPageCount = 3
+const perPageCount = 12
 
 btnSeeMore.onclick = (e)=>{
     offset++
