@@ -3,6 +3,11 @@ import {fetchData} from "./main.js"
 const wrapper = document.querySelector(".wrapper")
 const productCategory = document.querySelector(".product-category")
 const btnSeeMore = document.querySelector(".btn-seemore")
+const skeletonEl = document.querySelector(".skeleton")
+
+function closeLoading () {
+    skeletonEl.style.display = "none"
+}
 
 let totalProducts = 0;
 let loadedProducts = 0;
@@ -54,9 +59,11 @@ productCategory.addEventListener("click", (event)=>{
     if(event.target.tagName === "LI") {
         wrapper.innerHTML = null
         if(event.target.innerHTML === "All"){
-            fetchData(`products`, renderProduct)
+            skeletonEl.style.display = "flex"
+            fetchData(`products`, renderProduct, closeLoading)
         }else {
-            fetchData(`products/category/${event.target.innerHTML}`, renderProduct)
+            skeletonEl.style.display = "flex"
+            fetchData(`products/category/${event.target.innerHTML}`, renderProduct, closeLoading)
         }
     }
 })
@@ -71,5 +78,23 @@ btnSeeMore.onclick = (e)=>{
 
 window.onload = ()=>{
     fetchData("products/category-list", renderProductsCategories)
-    fetchData(`products?limit=${perPageCount}&skip=0`, renderProduct)
+    fetchData(`products?limit=${perPageCount}&skip=0`, renderProduct, closeLoading)
 }
+
+function createSkeleton() {
+    const fragment = document.createDocumentFragment()
+    Array(12).fill("").forEach(()=>{
+        const div = document.createElement("div")
+        div.className = "skeleton__item"
+        div.innerHTML = `
+            <div class="skeleton__image skeleton__animation"></div>
+            <div class="skeleton__line skeleton__animation"></div>
+            <div class="skeleton__line skeleton__animation"></div>
+            <div class="skeleton__line skeleton__animation"></div>
+            <div class="skeleton__line skeleton__animation"></div>
+        `
+        fragment.appendChild(div)
+    })
+    skeletonEl.appendChild(fragment)
+}
+createSkeleton()

@@ -1,6 +1,6 @@
 const BASE_URL = "https://dummyjson.com"
 
-export async function fetchData(endpoint, callback){
+export async function fetchData(endpoint, callback, closeLoading){
     try{
         const response = await fetch(`${BASE_URL}/${endpoint}`)
         const data = await response.json()
@@ -8,7 +8,9 @@ export async function fetchData(endpoint, callback){
     }catch(err){
         console.log(err)
     }
-    finally{()=>{
-        // closeLoading()
-    }}
+    finally {
+        if (typeof closeLoading === "function") {
+            closeLoading();
+        }
+    }
 }
